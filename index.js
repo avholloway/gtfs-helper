@@ -1,3 +1,4 @@
+import GtfsRealtimeBindings from "gtfs-realtime-bindings";
 import express from 'express';
 const app = express();
 
@@ -12,11 +13,18 @@ app.get('/', (index, res) => {
 // 2 & 3. POST endpoint to receive data and return JSON
 app.post('/data', (req, res) => {
   const receivedData = req.body;
-  console.log("Data received:", receivedData);
+  console.log("Data received");
+
+  const buffer = await response.arrayBuffer();
+  const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(new Uint8Array(buffer));
+  let entities = [];
+  feed.entity.forEach((entity) => {
+      entities.push(entity.toJSON());
+  });
   
-  res.status(201).json({
+  res.status(200).json({
     status: "success",
-    received: receivedData
+    data: entities
   });
 });
 
