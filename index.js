@@ -5,7 +5,7 @@ const app = express();
 
 app.use(express.json());
 
-app.get('/', (index, res) => {
+app.get('/', async (index, res) => {
 
   try {
     const response = await fetch("https://gtfsapi.translink.ca/v3/gtfsposition?apikey=EuftOZI6oDloPgi25jdw");
