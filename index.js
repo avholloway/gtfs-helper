@@ -3,12 +3,14 @@ import fetch from "node-fetch";
 import express from 'express';
 const app = express();
 
+const api_key = const databaseUrl = process.env.api_key;
+
 app.use(express.json());
 
 app.get('/', async (index, res) => {
 
   try {
-    const response = await fetch("https://gtfsapi.translink.ca/v3/gtfsposition?apikey=EuftOZI6oDloPgi25jdw");
+    const response = await fetch(`https://gtfsapi.translink.ca/v3/gtfsposition?apikey=${api_key}`);
     if (!response.ok) {
       const error = new Error(`${response.url}: ${response.status} ${response.statusText}`);
       error.response = response;
