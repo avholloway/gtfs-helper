@@ -7,7 +7,7 @@ const api_key = process.env.API_KEY;
 
 app.use(express.json());
 
-app.get('/', async (index, res) => {
+app.get('/', async (req, res) => {
 
   try {
     const response = await fetch(`https://gtfsapi.translink.ca/v3/gtfsposition?apikey=${api_key}`);
@@ -20,8 +20,12 @@ app.get('/', async (index, res) => {
     const feed = GtfsRealtimeBindings.transit_realtime.FeedMessage.decode(new Uint8Array(buffer));
     let entities = [];
     feed.entity.forEach((entity) => {
-      entities.push(entity.toJSON());
+      const data = entity.toJSON();
+      if (!req.query.routeId || req.query.routeId === data.vehicle.trip.routeId) {
+        entities.push(data);
+      }
     });
+
     res.json(entities);
   } catch (error) {
     res.json({"status":"error","error":error});
